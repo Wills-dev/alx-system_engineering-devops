@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# recieve information in port 98 run in other terminal
+# this command telnet localhost 98 te see how it works
+# remember give sudo permissions
+nc -l 98
