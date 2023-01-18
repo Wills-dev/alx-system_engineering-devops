@@ -1,30 +1,16 @@
 #!/usr/bin/python3
-""" Script that uses JSONPlaceholder API to get information about employee """
+"""Returns to-do list information for a given employee ID."""
 import json
+from urllib import request
 import requests
 import sys
-
-
 if __name__ == "__main__":
-    url = 'https://jsonplaceholder.typicode.com/'
+    u_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url+"users/{}".format(u_id)).json()
+    username = user.get("username")
+    todos = requests.get(url+"todos", params={"userId": u_id}).json()
 
-    userid = sys.argv[1]
-    user = '{}users/{}'.format(url, userid)
-    res = requests.get(user)
-    json_o = res.json()
-    name = json_o.get('username')
-
-    todos = '{}todos?userId={}'.format(url, userid)
-    res = requests.get(todos)
-    tasks = res.json()
-    l_task = []
-    for task in tasks:
-        dict_task = {"task": task.get('title'),
-                     "completed": task.get('completed'),
-                     "username": name}
-        l_task.append(dict_task)
-
-    d_task = {str(userid): l_task}
-    filename = '{}.json'.format(userid)
-    with open(filename, mode='w') as f:
-        json.dump(d_task, f)
+    with open("{}.json".format(u_id), "w") as jsonfile:
+        json.dump({u_id: [{"task": t.get("title"), "completed": t.get(
+            "completed"), "username": username} for t in todos]}, jsonfile)

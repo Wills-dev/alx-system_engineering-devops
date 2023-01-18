@@ -1,1 +1,1 @@
-my first script readme
+# SCRIPT
